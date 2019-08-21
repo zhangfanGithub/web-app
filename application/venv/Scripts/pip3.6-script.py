@@ -1,4 +1,4 @@
-#!D:\python_project\web-app\untitled\venv\Scripts\python.exe
+#!D:\python_project\web-app\web-app\application\venv\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'pip==19.0.3','console_scripts','pip3.6'
 __requires__ = 'pip==19.0.3'
 import re
