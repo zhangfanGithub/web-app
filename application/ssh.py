@@ -2,6 +2,7 @@ import  paramiko
 import  os
 import  threading
 import  sys
+
 def  remote_comm(host,name,pwd,command):
     try:
         ssh = paramiko.SSHClient()
@@ -37,12 +38,39 @@ def red_file():
             names=line.split(',')[1]
             pwds=line.split(',')[2].replace('\n','')
             yield  ips,names,pwds
-
-
+def up_file(host,name,pwd,loadfile,remotefile):
+    transport=paramiko.Transport((host,22))
+    transport.connect(username=name,password=pwd)
+    sftp = paramiko.SFTPClient.from_transport(transport)
+    sftp.get(loadfile,remotefile)
+    print("上传成功")
+    transport.close()
+def exist_file(file):
+    if not os.path.exists(file):
+        print("file not find")
+        exit(5)
+    return file
 if __name__ == '__main__':
-    command=sys.argv[1]
+    option=sys.argv[1]
+
     #command="echo11 'haha'"
-    for ip,name,pwd in red_file():
-        print(ip,name,pwd)
-        t = threading.Thread(target=remote_comm, args=(ip, name, pwd,command))
-        t.start()
+
+    if option=="--help":
+        print("option  -m   eg: ssh.py  -m  'echo hello' "
+              " -put  eg:ssh.py  -put load.txt  remote.txt"
+              " -down eg:ssh.py -down  /tmp/hosts  loaddir")
+
+    elif option=="-m":
+        command = sys.argv[2]
+        for ip, name, pwd in red_file():
+            print(ip, name, pwd)
+            t = threading.Thread(target=remote_comm, args=(ip, name, pwd, command))
+            t.start()
+    elif option=="-put":
+        """put file"""
+        load = exist_file(sys.argv[2])
+        remote = sys.argv[3]
+        for ip, name, pwd in red_file():
+            print(ip, name, pwd)
+            t = threading.Thread(target=up_file, args=(ip, name, pwd,load,remote))
+            t.start()
