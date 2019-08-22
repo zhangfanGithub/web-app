@@ -17,3 +17,8 @@ awesome-python3-webapp/  <-- 根目录
 +- ios/                  <-- 存放iOS App工程
 |
 +- LICENSE               <-- 代码LICENSE
+
+ssh.py  批量工具
+hosts 添加ip，用户，密码
+
+ping.py  检测网络已用ip工具脚本
