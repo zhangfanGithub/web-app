@@ -4,6 +4,7 @@ import  threading
 import  sys
 
 def  remote_comm(host,name,pwd,command):
+    """command"""
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
@@ -39,27 +40,32 @@ def red_file():
             yield  ips,names,pwds
 
 def  sftp_client(host,name,pwd):
+    """paramiko.sftpclient"""
     transport = paramiko.Transport((host, 22))
     transport.connect(username=name, password=pwd)
     sftp = paramiko.SFTPClient.from_transport(transport)
     return  sftp
 
 def up_file(host,name,pwd,loadfile,remotefile):
+    """put"""
     sftp=sftp_client(host,name,pwd)
     sftp.put(loadfile,remotefile)
     print("上传成功")
     sftp.close()
 def down_file(host,name,pwd,remotefile,loadfile):
+    """down"""
     sftp = sftp_client(host, name, pwd)
     sftp.get(remotefile,loadfile)
     print("下载成功")
     sftp.close()
 def exist_file_load_put(file):
+    """put file exist or not exist"""
     if not os.path.exists(file):
         print("upload file not find")
         exit(5)
     return file
 def exist_file_load_down(file):
+    """down file exist or not exist"""
     if  os.path.exists(file):
         print("down file already exist")
         exit(6)
@@ -69,7 +75,9 @@ if __name__ == '__main__':
     option=sys.argv[1]
     #option="-put"
     if option=="--help":
-        print("option\n\t-m\teg:\tssh.py\t-m\t'echo hello'\t\t\t\t\t#command shell\n "
+        print("option\n"
+              "\tdefault read ./hosts file  \tformat:'ip,name,password\\n'  \n"
+              "\t-m\teg:\tssh.py\t-m\t'echo hello'\t\t\t\t\t#command shell\n "
               "\t-put\teg:\tssh.py\t-put\tD:\HELLO\host\t/root/host(需要带文件名)\t#上传文件\n"
               "\t-down\teg:\tssh.py\t-down\t/tmp/hosts\tD:/HELLO/hosts(需要带文件名)\t#下载文件\n")
     elif option=="-m":
